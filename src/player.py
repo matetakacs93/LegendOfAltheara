@@ -19,8 +19,11 @@ class Player:
 
         self.health = 100  # Aktuális életerő
         self.max_health = 100  # Maximális életerő
-        self.score = 0  # Pontszám (új attribútum)
-        self.coins = 0  # Érmék száma
+        self.xp = 0
+        self.xp_needed = 100
+        self.level = 1
+        self.attack = 10  # Támadó erő
+        self.defense = 5  # Védekező erő
 
         self.facing_right = True  # Játékos iránya
 
@@ -58,6 +61,20 @@ class Player:
                 elif loot.loot_type == "coin":
                     self.score += 10  # Pontszám növelése
                 loot.kill()  # Loot eltávolítása
+
+    def gain_xp(self, amount):
+        """XP gyűjtése."""
+        self.xp += amount
+        if self.xp >= self.xp_needed:
+            self.level_up()
+
+    def level_up(self):
+        """Szintlépés logikája."""
+        self.level += 1
+        self.xp = 0  # XP visszaállítása
+        self.xp_needed += 50  # Következő szinthez több XP szükséges
+        self.max_health += 20  # Életerő növelése
+        self.health = self.max_health  # Teljes életerő visszaállítása
 
     def update(self, keys, delta_time, platforms, loots):
         """Játékos frissítése."""

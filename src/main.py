@@ -5,6 +5,9 @@ from game_platform import Platform  # A platform osztály importálása
 from camera import Camera  # A kamera osztály importálása
 from loot import Loot  # A loot (zsákmány) osztály importálása
 from main_menu import MainMenu  # Főképernyő betöltése
+from hud import HUD # HUD modul importálása
+from level_up import LevelUpMenu
+
 
 pygame.init()  # A Pygame inicializálása
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # A képernyő méretének beállítása
@@ -32,6 +35,7 @@ def start_game(screen):
 
     # Kamera inicializálása
     camera = Camera(level_width=3000, level_height=2000)  # A kamera a pálya méretéhez igazodik
+    hud = HUD(screen, player)  # HUD inicializálása
 
     # Fő játékkör futási állapot
     running = True
@@ -74,11 +78,34 @@ def start_game(screen):
         player.draw(screen, camera)
 
         # HUD kirajzolása
-        draw_hud(screen, player)
+        hud.draw()  # HUD megjelenítése
 
         # Képernyő frissítése
         pygame.display.flip()
 
+# Szintlépési menü
+def level_up_menu(screen, player):
+    """Szintlépési menü megjelenítése."""
+    level_menu = LevelUpMenu(screen, player)
+    menu_running = True
+
+    while menu_running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:  # Szintlépés elfogadása
+                    player.apply_level_up(level_menu.selected_upgrade)
+                    menu_running = False
+                elif event.key == pygame.K_UP:
+                    level_menu.select_previous_option()
+                elif event.key == pygame.K_DOWN:
+                    level_menu.select_next_option()
+
+        screen.fill(BACKGROUND_COLOR)  # Képernyő törlése
+        level_menu.draw()  # Szintlépési menü kirajzolása
+        pygame.display.flip()
 
 def draw_hud(screen, player):
     """HUD (életerő és pontszám) kirajzolása."""
