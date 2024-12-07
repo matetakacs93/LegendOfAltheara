@@ -3,10 +3,11 @@ from settings import *  # A beállításokat tartalmazó fájl importálása
 from player import Player  # A játékos osztály importálása
 from game_platform import Platform  # A platform osztály importálása
 from camera import Camera  # A kamera osztály importálása
-from loot import Loot  # A loot (zsákmány) osztály importálása
+from loot import Loot  # A loot  osztály importálása
 from main_menu import MainMenu  # Főképernyő betöltése
 from hud import HUD # HUD modul importálása
 from level_up import LevelUpMenu
+from enemies import Enemy
 
 
 pygame.init()  # A Pygame inicializálása
@@ -33,6 +34,11 @@ def start_game(screen):
         Loot(500, SCREEN_HEIGHT - 250, 32, 32, "assets/loots/pink_stone.png", "health")  # Életerő loot
     )
 
+    enemies = [
+        Enemy(700, SCREEN_HEIGHT - 150),  # Egy ellenség a pálya közepén
+        Enemy(1100, SCREEN_HEIGHT - 250)  # Egy másik ellenség jobbra
+    ]
+
     # Kamera inicializálása
     camera = Camera(level_width=3000, level_height=2000)  # A kamera a pálya méretéhez igazodik
     hud = HUD(screen, player)  # HUD inicializálása
@@ -58,7 +64,7 @@ def start_game(screen):
         keys = pygame.key.get_pressed()
 
         # Játékos frissítése (hozzáadva a lootokat is)
-        player.update(keys, delta_time, platforms, loots)
+        player.update( keys, delta_time, platforms, loots, enemies)
 
         # Kamera frissítése a játékos pozíciója alapján
         camera.update(player)
@@ -73,6 +79,9 @@ def start_game(screen):
         # Lootok kirajzolása
         for loot in loots:
             loot.draw(screen, camera)
+        
+        for enemy in enemies:
+            enemy.draw(screen, camera)
 
         # Játékos kirajzolása
         player.draw(screen, camera)
