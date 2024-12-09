@@ -9,8 +9,8 @@ from scenes.hud import initialize_hud, draw_hud  # A HUD inicializáló és kira
 from scenes.level_up import LevelUpMenu
 from gameobjects.enemies import Enemy
 
-
 pygame.init()  # A Pygame inicializálása
+pygame.mixer.init()  # Mixer inicializálása itt
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # A képernyő méretének beállítása
 pygame.display.set_caption("Legend of Altheara")  # A játék ablakának címének beállítása
 

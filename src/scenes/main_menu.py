@@ -1,7 +1,6 @@
 import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
-
 class Button:
     def __init__(self, x, y, width, height, text, images, action=None):
         self.rect = pygame.Rect(x, y, width, height)
@@ -35,6 +34,11 @@ class Button:
 
 class MainMenu:
     def __init__(self, screen, has_save=False):
+        pygame.init()
+        pygame.mixer.init()
+        pygame.mixer.music.load("assets/sounds/main_menu_theme.ogg")
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
         """Inicializálja a főmenüt."""
         self.screen = screen  # A képernyő objektum
         self.has_save = has_save  # Van-e mentett játék
@@ -63,15 +67,15 @@ class MainMenu:
         # Gombok inicializálása
         self.new_game_button = Button(
             SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 100, 200, 50,
-            "Új játék", button_images, self.start_new_game
+            "New Game", button_images, self.start_new_game
         )  # Új játék gomb
         self.continue_button = Button(
             SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50,
-            "Folytatás", button_images, self.continue_game
+            "Continue", button_images, self.continue_game
         )  # Folytatás gomb
         self.exit_button = Button(
             SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 100, 200, 50,
-            "Kilépés", button_images, self.exit_game
+            "Quit", button_images, self.exit_game
         )  # Kilépés gomb
         self.settings_button = Button(
             20, SCREEN_HEIGHT - 70, 50, 50, "",
