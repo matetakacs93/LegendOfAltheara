@@ -17,11 +17,14 @@ class Player:  # A játékos osztály definiálása.
         self.gravity = 1500  # A gravitáció mértéke, amely lefelé húzza a játékost.
         self.jump_strength = -700  # Az ugrási erő, amely felfelé mozgatja a játékost.
         self.on_ground = False  # Logikai érték, amely azt jelzi, hogy a játékos a földön van-e.
+        self.score = 0  # Pontszám kezdeti értéke
         self.health = 100  # A játékos kezdő életereje.
         self.max_health = 100  # A játékos maximális életereje.
+        self.mana = 50  # Alapértelmezett mana érték
+        self.max_mana = 100  # Maximális mana érték
         self.coins = 0  # Az összegyűjtött érmék száma.
         self.xp = 0  # A megszerzett tapasztalati pontok száma.
-        self.xp_needed = 100  # A szintlépéshez szükséges tapasztalati pontok száma.
+        self.xp_to_level = 100  # A szintlépéshez szükséges tapasztalati pontok száma.
         self.level = 1  # A játékos szintje.
 
         self.attack_cooldown = 300  # A támadások közötti várakozási idő milliszekundumban.
@@ -122,5 +125,19 @@ class Player:  # A játékos osztály definiálása.
             frame = pygame.transform.flip(frame, True, False)  # Fordítsa meg a képet.
         screen.blit(frame, camera.apply(self))  # Rajzolja ki a játékost a képernyőre.
 
+    def collect_loot(self, loot):
+        self.score += loot.value  # Loot értékének hozzáadása a pontszámhoz
 
+    def add_xp(self, amount):
+        self.xp += amount
+        if self.xp >= self.xp_to_level:
+            self.level_up()
 
+    def level_up(self):
+        if self.xp >= self.xp_to_level:
+            self.xp -= self.xp_to_level
+            self.xp_to_level *= 1.2  # Következő szinthez szükséges XP növelése
+            self.max_health += 10
+            self.health = self.max_health
+            self.max_mana += 5
+            self.mana = self.max_mana

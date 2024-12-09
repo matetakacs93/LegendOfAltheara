@@ -5,7 +5,7 @@ from game_platform import Platform  # A platform osztály importálása
 from camera import Camera  # A kamera osztály importálása
 from loot import Loot  # A loot  osztály importálása
 from main_menu import MainMenu  # Főképernyő betöltése
-from hud import HUD # HUD modul importálása
+from hud import initialize_hud, draw_hud  # A HUD inicializáló és kirajzoló funkciók importálása
 from level_up import LevelUpMenu
 from enemies import Enemy
 
@@ -41,7 +41,6 @@ def start_game(screen):
 
     # Kamera inicializálása
     camera = Camera(level_width=3000, level_height=2000)  # A kamera a pálya méretéhez igazodik
-    hud = HUD(screen, player)  # HUD inicializálása
 
     # Fő játékkör futási állapot
     running = True
@@ -86,8 +85,16 @@ def start_game(screen):
         # Játékos kirajzolása
         player.draw(screen, camera)
 
+        hud_elements = initialize_hud(screen)
+
+
         # HUD kirajzolása
-        hud.draw()  # HUD megjelenítése
+        player.draw(screen, camera)
+        hud_elements["health_bar"].set_value(0.75)  # Életerő: 75%
+        hud_elements["mana_bar"].set_value(0.5)    # Mana: 50%
+        hud_elements["xp_bar"].set_value(0.3)      # XP: 30%
+
+        draw_hud(hud_elements,player, screen)
 
         # Képernyő frissítése
         pygame.display.flip()
@@ -116,14 +123,26 @@ def level_up_menu(screen, player):
         level_menu.draw()  # Szintlépési menü kirajzolása
         pygame.display.flip()
 
-def draw_hud(screen, player):
-    """HUD (életerő és pontszám) kirajzolása."""
-    font = pygame.font.Font(None, 36)  # Betűtípus és méret
-    health_text = font.render(f"Health: {player.health}", True, (255, 255, 255))  # Életerő szöveg
-    score_text = font.render(f"Score: {player.score}", True, (255, 255, 255))  # Pontszám szöveg
-    screen.blit(health_text, (10, 10))  # Életerő megjelenítése a bal felső sarokban
-    screen.blit(score_text, (10, 50))  # Pontszám megjelenítése az életerő alatt
 
+def draw_hud(hud_elements, player, screen):
+    """
+    Kirajzolja a HUD elemeket.
+    """
+    for bar_name, bar in hud_elements.items():
+        if bar_name == "health_bar":
+            color_key = "red"
+            value = player.health / player.max_health  # Életerő aránya
+        elif bar_name == "mana_bar":
+            color_key = "blue"
+            value = player.mana / player.max_mana  # Mana aránya
+        elif bar_name == "xp_bar":
+            color_key = "green"
+            value = player.xp / player.xp_to_level  # Tapasztalati pont aránya
+        else:
+            raise KeyError(f"Unknown HUD element: {bar_name}")
+        
+        # Kirajzolás
+        bar.draw(color_key, value)
 
 def main_menu(screen):
     """Főmenü megjelenítése."""
