@@ -8,6 +8,8 @@ from scenes.main_menu import MainMenu  # Főképernyő betöltése
 from scenes.hud import initialize_hud, draw_hud  # A HUD inicializáló és kirajzoló funkciók importálása
 from scenes.level_up import LevelUpMenu
 from gameobjects.enemies import Enemy
+from gameobjects.bonfire import Bonfire
+from scenes.save_system import save_game
 
 
 pygame.init()  # A Pygame inicializálása
@@ -298,4 +300,65 @@ while menu_running:
 
 pygame.quit()
 
+def start_game(screen):
+    """
+    A játék fő indító része, amely inicializálja a játékos, platformok, lootok és a kamera mellett a bonfire-eket.
+    """
+    # Időzítő és állapot változó
+    clock = pygame.time.Clock()
+    running = True
+
+    # Bonfire inicializálása
+    bonfire_images = [
+        "assets/bonfire/bonfire1.png",
+        "assets/bonfire/bonfire2.png",
+        "assets/bonfire/bonfire3.png",
+        "assets/bonfire/bonfire4.png",
+        "assets/bonfire/bonfire5.png",
+        "assets/bonfire/bonfire6.png",
+        "assets/bonfire/bonfire7.png",
+        "assets/bonfire/bonfire8.png",
+    ]
+    bonfire_group = pygame.sprite.Group(
+        Bonfire(150, SCREEN_HEIGHT - 250, bonfire_images),
+        Bonfire(700, SCREEN_HEIGHT - 300, bonfire_images),
+    )
+
+    # Játékos inicializálása
+    player = Player(SCREEN_WIDTH // 4, SCREEN_HEIGHT - 300)
+
+    # Kamera inicializálása
+    camera = Camera(level_width=3000, level_height=2000)
+
+    # Főciklus
+    while running:
+        delta_time = clock.tick(FPS) / 1000
+
+        # Események kezelése
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Billentyűzet kezelése
+        keys = pygame.key.get_pressed()
+        player.update(keys, delta_time, [], [], [])
+
+        # Bonfire interakció kezelése
+        for bonfire in bonfire_group:
+            if bonfire.rect.colliderect(player.rect):
+                player.health = player.max_health
+                player.mana = player.max_mana
+                save_game({"health": player.health, "mana": player.mana, "xp": player.xp})
+                print("Mentés sikeres a bonfire-nél!")
+
+        # Kamera frissítése
+        camera.update(player)
+
+        # Kirajzolás
+        screen.fill((0, 0, 0))
+        bonfire_group.update(delta_time)
+        bonfire_group.draw(screen)
+        player.draw(screen, camera)
+
+        pygame.display.flip()
 
