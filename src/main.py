@@ -1,13 +1,13 @@
 import pygame  # A Pygame könyvtár importálása, amely a játék működéséhez szükséges
 from settings import *  # A beállításokat tartalmazó fájl importálása
-from player import Player  # A játékos osztály importálása
-from game_platform import Platform  # A platform osztály importálása
-from camera import Camera  # A kamera osztály importálása
-from loot import Loot  # A loot  osztály importálása
-from main_menu import MainMenu  # Főképernyő betöltése
-from hud import initialize_hud, draw_hud  # A HUD inicializáló és kirajzoló funkciók importálása
-from level_up import LevelUpMenu
-from enemies import Enemy
+from gameobjects.player import Player  # A játékos osztály importálása
+from gameobjects.game_platform import Platform  # A platform osztály importálása
+from scenes.camera import Camera  # A kamera osztály importálása
+from gameobjects.loot import Loot  # A loot  osztály importálása
+from scenes.main_menu import MainMenu  # Főképernyő betöltése
+from scenes.hud import initialize_hud, draw_hud  # A HUD inicializáló és kirajzoló funkciók importálása
+from scenes.level_up import LevelUpMenu
+from gameobjects.enemies import Enemy
 
 
 pygame.init()  # A Pygame inicializálása
