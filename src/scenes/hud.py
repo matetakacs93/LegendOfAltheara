@@ -110,7 +110,7 @@ def initialize_hud(screen):
         "xp_bar": xp_bar,  # XP sáv
     }
 
-def draw_hud(hud_elements, player):
+def draw_hud(hud_elements, player, screen):
     """Kirajzolja a HUD elemeit a játékos állapotának megfelelően."""
     # Életerő sáv rajzolása
     hud_elements["health_bar"].draw("red", player.health / player.max_health)  # Életerő sáv kirajzolása
