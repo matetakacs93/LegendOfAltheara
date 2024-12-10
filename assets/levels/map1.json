@@ -1,0 +1,16 @@
+{
+	"identifier": "Forest_level_1",
+	"uniqueIdentifer": "15493aa0-9b00-11ef-bb81-9d26aba60559",
+	"x": 0,
+	"y": 0,
+	"width": 9408,
+	"height": 1024,
+	"bgColor": "#696A79",
+	"neighbourLevels": [],
+	"customFields" : {},
+	"layers": [
+		"Maptiles.png",
+		"Dekor16.png"
+	],
+	"entities" : {}
+}
