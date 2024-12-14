@@ -96,7 +96,8 @@ def start_game(screen):
         hud_elements["mana_bar"].set_value(0.5)    # Mana: 50%
         hud_elements["xp_bar"].set_value(0.3)      # XP: 30%
 
-        draw_hud(hud_elements,player, screen)
+        draw_hud(hud_elements, player)
+
 
         # Képernyő frissítése
         pygame.display.flip()
@@ -126,25 +127,20 @@ def level_up_menu(screen, player):
         pygame.display.flip()
 
 
-def draw_hud(hud_elements, player, screen):
+def draw_hud(hud_elements, player):
     """
-    Kirajzolja a HUD elemeket.
+    A HUD elemek frissítése és kirajzolása.
+    :param hud_elements: A HUD elemek szótára.
+    :param player: A játékos objektum, amelynek állapota alapján frissítjük a sávokat.
     """
-    for bar_name, bar in hud_elements.items():
-        if bar_name == "health_bar":
-            color_key = "red"
-            value = player.health / player.max_health  # Életerő aránya
-        elif bar_name == "mana_bar":
-            color_key = "blue"
-            value = player.mana / player.max_mana  # Mana aránya
-        elif bar_name == "xp_bar":
-            color_key = "green"
-            value = player.xp / player.xp_to_level  # Tapasztalati pont aránya
-        else:
-            raise KeyError(f"Unknown HUD element: {bar_name}")
-        
-        # Kirajzolás
-        bar.draw(color_key, value)
+    # Értékek frissítése
+    hud_elements["health_bar"].set_value(player.health / player.max_health)
+    hud_elements["mana_bar"].set_value(player.mana / player.max_mana)
+    hud_elements["xp_bar"].set_value(player.xp / player.xp_to_level)
+
+    # Kirajzolás
+    for bar in hud_elements.values():
+        bar.draw()
 
 def main_menu(screen):
     """Főmenü megjelenítése."""
